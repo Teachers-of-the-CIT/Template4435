@@ -18,6 +18,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 using System.IO;
 using System.Data.Entity;
+using System.Diagnostics;
 
 namespace Template4435
 {
@@ -122,7 +123,90 @@ namespace Template4435
 
         private void BtnCHELNYExport_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                List<Clients> clients = new List<Clients>();
+                using (Laba2ISRPOEntities context = new Laba2ISRPOEntities())
+                {
+                    clients =  context.Clients.ToList();
+                }
+                if(clients.Count > 0)
+                {
+                    Excel.Application app = new Excel.Application();
+                    Excel.Workbook wb = app.Workbooks.Add();
 
+                    Excel.Worksheet ws = (Excel.Worksheet)wb.Sheets.Add(After: wb.ActiveSheet);
+                    ws.Name = "от 20 до 29";
+                    Excel.Range rng = ws.get_Range("A1", "C1");
+                    rng.Cells.Font.Bold = true;
+                    rng.Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                    List<Clients> grouped = clients.Where(p => p.Age >= 20 && p.Age <= 29).ToList();
+                    ws.Cells[1, "A"].Value = "Код клиента";
+                    ws.Cells[1, "B"].Value = "ФИО";
+                    ws.Cells[1, "C"].Value = "E-mail";
+                    for (int i = 0; i < grouped.Count; i++)
+                    {
+                        ws.Cells[i+2, "A"].Value = grouped[i].id;
+                        ws.Cells[i + 2, "B"].Value = grouped[i].FIO;
+                        ws.Cells[i + 2, "C"].Value = grouped[i].email;
+                    }
+                    ws.Columns.EntireColumn.AutoFit();
+
+                    ws = (Excel.Worksheet)wb.Sheets.Add(After: wb.ActiveSheet);
+                    ws.Name = "от 30 до 39";
+                    rng = ws.get_Range("A1", "C1");
+                    rng.Cells.Font.Bold = true;
+                    rng.Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                    grouped = clients.Where(p => p.Age >= 30 && p.Age <= 39).ToList();
+                    ws.Cells[1, "A"].Value = "Код клиента";
+                    ws.Cells[1, "B"].Value = "ФИО";
+                    ws.Cells[1, "C"].Value = "E-mail";
+                    for (int i = 0; i < grouped.Count; i++)
+                    {
+                        ws.Cells[i + 2, "A"].Value = grouped[i].id;
+                        ws.Cells[i + 2, "B"].Value = grouped[i].FIO;
+                        ws.Cells[i + 2, "C"].Value = grouped[i].email;
+                    }
+                    ws.Columns.EntireColumn.AutoFit();
+
+                    ws = (Excel.Worksheet)wb.Sheets.Add(After: wb.ActiveSheet);
+                    ws.Name = "от 40";
+                    rng = ws.get_Range("A1", "C1");
+                    rng.Cells.Font.Bold = true;
+                    rng.Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                    grouped = clients.Where(p => p.Age >= 40).ToList();
+                    ws.Cells[1, "A"].Value = "Код клиента";
+                    ws.Cells[1, "B"].Value = "ФИО";
+                    ws.Cells[1, "C"].Value = "E-mail";
+                    for (int i = 0; i < grouped.Count; i++)
+                    {
+                        ws.Cells[i + 2, "A"].Value = grouped[i].id;
+                        ws.Cells[i + 2, "B"].Value = grouped[i].FIO;
+                        ws.Cells[i + 2, "C"].Value = grouped[i].email;
+                    }
+                    ws.Columns.EntireColumn.AutoFit();
+
+                    ws = wb.Sheets[1];
+                    ws.Delete();
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = "файл Excel (Spisok.xlsx)|*.xlsx";
+                    sfd.ShowDialog();
+                    if (sfd.FileName != "")
+                    {
+                        wb.SaveAs(sfd.FileName);
+                        wb.Close();
+                        Process.Start(sfd.FileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
