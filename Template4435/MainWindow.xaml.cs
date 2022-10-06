@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+//using System.Text.Json;
+using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
+using System.IO;
+using System.Data.Entity;
 
 namespace Template4435
 {
@@ -52,6 +58,71 @@ namespace Template4435
         private void LR1_Shumilkin_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Автор: Шумилкин Александр Олегович", "4435_Шумилкин_Александр");
+        }
+
+        private void BtnCHELNYImport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog()
+                {
+                    DefaultExt = "*.xls;*.xlsx",
+                    Filter = "файл Excel (Spisok.xlsx)|*.xlsx",
+                    Title = "Выберите файл базы данных",
+                    Multiselect = false
+                };
+                if (!(ofd.ShowDialog() == true))
+                    return;
+
+                Excel.Application app = new Excel.Application();
+                Excel.Workbook wb = app.Workbooks.Open(ofd.FileName);
+                Excel.Worksheet ws = wb.Sheets[1];
+
+                List<Clients> clients = new List<Clients>();
+                for(int i = 2; i < ws.Rows.Count; i++)
+                {
+                    if (ws.Cells[i, "A"].Value != null)
+                    {
+                        Clients client = new Clients();
+                        client.FIO = ws.Cells[i, "A"].Value;
+                        client.id = Convert.ToInt32(ws.Cells[i, "B"].Value);
+                        client.date_birth = Convert.ToDateTime(ws.Cells[i, "C"].Value);
+                        client.adress_index = Convert.ToInt32(ws.Cells[i, "D"].Value);
+                        client.adress_gorod = ws.Cells[i, "E"].Value.ToString().Substring(3);
+                        client.adress_street = ws.Cells[i, "F"].Value;
+                        client.adress_house = ws.Cells[i, "G"].Value.ToString();
+                        client.adress_flat = ws.Cells[i, "H"].Value.ToString();
+                        client.email = ws.Cells[i, "I"].Value;
+
+                        clients.Add(client);
+
+                    }
+                    else break;
+                }
+
+                try
+                {
+                    using(Laba2ISRPOEntities context = new Laba2ISRPOEntities())
+                    {
+                        context.Clients.AddRange(clients);
+                        context.SaveChanges();
+                        MessageBox.Show("Данные импортированы");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.InnerException.InnerException.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void BtnCHELNYExport_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

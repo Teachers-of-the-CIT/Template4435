@@ -44,7 +44,12 @@
         <Button x:Name="AzatBtn" Click="AzatBtn_Click"  Content="Задача 23" Grid.Row="23"></Button>
         <Button x:Name="LR1_Shumilkin" Click="LR1_Shumilkin_Click" Content="КОНЕЦ! Шумилкин А.О." Grid.Row="15" />
         <Button x:Name="BnnTask" Click="BnnTask_Click" Content="Задача" Grid.Row="12"></Button>
-        <Button x:Name="BtnCHELNY" Click="BtnCHELNY_Click"   Content="ЧЕЛНЫ ТОП " Grid.Row="4"></Button>
+        <StackPanel  Grid.Row="4" Orientation="Horizontal">
+            <Button x:Name="BtnCHELNY" Click="BtnCHELNY_Click"   Content="ЧЕЛНЫ ТОП " Margin="10 0"></Button>
+            <Button x:Name="BtnCHELNYImport" Click="BtnCHELNYImport_Click"   Content="ЧЕЛНЫ ТОП Импорт" Margin="10 0"></Button>
+            <Button x:Name="BtnCHELNYExport" Click="BtnCHELNYExport_Click"   Content="ЧЕЛНЫ ТОП Экспорт" Margin="10 0"></Button>
+        </StackPanel>
+        
         <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Grid.Row="6"></Button>
     </Grid>
 </Window>
