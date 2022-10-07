@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище Laba2ISRPOModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище Laba2ISRPOModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Clients">
           <Key>
             <PropertyRef Name="id" />
@@ -19,11 +19,25 @@
           <Property Name="adress_flat" Type="nvarchar" MaxLength="10" />
           <Property Name="email" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="ClientsJSON">
+          <Key>
+            <PropertyRef Name="CodeClient" />
+          </Key>
+          <Property Name="CodeClient" Type="int" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="200" />
+          <Property Name="BirthDate" Type="date" />
+          <Property Name="Index" Type="int" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="Street" Type="nvarchar" MaxLength="50" />
+          <Property Name="Home" Type="nvarchar" MaxLength="10" />
+          <Property Name="Kvartira" Type="nvarchar" MaxLength="10" />
+          <Property Name="E_mail" Type="nvarchar" MaxLength="100" />
+        </EntityType>
         <EntityContainer Name="Хранилище Laba2ISRPOModelContainer">
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientsJSON" EntityType="Self.ClientsJSON" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Laba2ISRPOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -43,7 +57,22 @@
         </EntityType>
         <EntityContainer Name="Laba2ISRPOEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Clients" EntityType="Self.Clients" />
+          <EntitySet Name="ClientsJSON" EntityType="Laba2ISRPOModel.ClientsJSON" />
         </EntityContainer>
+        <EntityType Name="ClientsJSON">
+          <Key>
+            <PropertyRef Name="CodeClient" />
+          </Key>
+          <Property Name="CodeClient" Type="Int32" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="BirthDate" Type="DateTime" Precision="0" />
+          <Property Name="Index" Type="Int32" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Street" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Home" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Kvartira" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="E_mail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -62,6 +91,21 @@
                 <ScalarProperty Name="adress_house" ColumnName="adress_house" />
                 <ScalarProperty Name="adress_flat" ColumnName="adress_flat" />
                 <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientsJSON">
+            <EntityTypeMapping TypeName="Laba2ISRPOModel.ClientsJSON">
+              <MappingFragment StoreEntitySet="ClientsJSON">
+                <ScalarProperty Name="E_mail" ColumnName="E_mail" />
+                <ScalarProperty Name="Kvartira" ColumnName="Kvartira" />
+                <ScalarProperty Name="Home" ColumnName="Home" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Index" ColumnName="Index" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="CodeClient" ColumnName="CodeClient" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

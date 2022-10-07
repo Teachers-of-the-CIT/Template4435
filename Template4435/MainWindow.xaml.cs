@@ -19,6 +19,10 @@ using Word = Microsoft.Office.Interop.Word;
 using System.IO;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+//using Newtonsoft.Json.Linq;
 
 namespace Template4435
 {
@@ -206,6 +210,42 @@ namespace Template4435
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void BtnCHELNYExportJSON_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnCHELNYImportJSON_Click(object sender, RoutedEventArgs e)
+        {
+            using (Laba2ISRPOEntities entities = new Laba2ISRPOEntities())
+            {
+                OpenFileDialog ofd = new OpenFileDialog()
+                {
+                    DefaultExt = "*json",
+                    Filter = "файл json|*.json",
+                    Title = "Выберите файл json",
+                    Multiselect = false
+                };
+                if (!(ofd.ShowDialog() == true))
+                    return;
+                try
+                {
+                    using (StreamReader r = new StreamReader(ofd.FileName))
+                    {
+                        string json = r.ReadToEnd();
+                        List<ClientsJSON> items = JsonConvert.DeserializeObject<List<ClientsJSON>>(json, new IsoDateTimeConverter { DateTimeFormat = "dd.MM.yyyy" });
+                        entities.ClientsJSON.AddRange(items);
+                        entities.SaveChanges();
+                        MessageBox.Show("Данные импортированы");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

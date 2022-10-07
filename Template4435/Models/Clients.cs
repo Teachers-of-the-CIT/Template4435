@@ -20,4 +20,19 @@ namespace Template4435
             }
         }
     }
+
+    public partial class ClientsJSON
+    {
+        public int Age
+        {
+            get
+            {
+                if (BirthDate != null)
+                {
+                    return DateTime.Now.Year - BirthDate.Value.Year;
+                }
+                else return -1;
+            }
+        }
+    }
 }

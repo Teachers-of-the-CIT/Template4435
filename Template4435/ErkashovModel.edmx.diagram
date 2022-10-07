@@ -6,6 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="0ecd2e46dc474f89a345f9c1e860b03d" Name="Diagram1">
         <EntityTypeShape EntityType="Laba2ISRPOModel.Clients" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Laba2ISRPOModel.ClientsJSON" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
