@@ -63,5 +63,10 @@ namespace Template4435
         {
             MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
         }
+
+        private void KhaertdinovDGButtonClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Хаертдинов Данил Гранитович", "4435_Хаертдинов");
+        }
     }
 }
