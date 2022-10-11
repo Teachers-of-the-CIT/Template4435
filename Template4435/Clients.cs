@@ -14,14 +14,5 @@ namespace Template4435
     
     public partial class Clients
     {
-        public int id { get; set; }
-        public string FIO { get; set; }
-        public Nullable<System.DateTime> date_birth { get; set; }
-        public Nullable<int> adress_index { get; set; }
-        public string adress_gorod { get; set; }
-        public string adress_street { get; set; }
-        public string adress_house { get; set; }
-        public string adress_flat { get; set; }
-        public string email { get; set; }
     }
 }

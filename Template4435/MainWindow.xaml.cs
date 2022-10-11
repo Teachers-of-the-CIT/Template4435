@@ -13,16 +13,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-//using System.Text.Json;
 using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 using System.IO;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Text.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-//using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
 
 namespace Template4435
 {
@@ -92,11 +89,11 @@ namespace Template4435
                         client.FIO = ws.Cells[i, "A"].Value;
                         client.id = Convert.ToInt32(ws.Cells[i, "B"].Value);
                         client.date_birth = Convert.ToDateTime(ws.Cells[i, "C"].Value);
-                        client.adress_index = Convert.ToInt32(ws.Cells[i, "D"].Value);
+                        client.adress_index = ws.Cells[i, "D"].Value.ToString();
                         client.adress_gorod = ws.Cells[i, "E"].Value.ToString().Substring(3);
                         client.adress_street = ws.Cells[i, "F"].Value;
-                        client.adress_house = ws.Cells[i, "G"].Value.ToString();
-                        client.adress_flat = ws.Cells[i, "H"].Value.ToString();
+                        client.adress_house = Convert.ToInt32(ws.Cells[i, "G"].Value.ToString());
+                        client.adress_flat = Convert.ToInt32(ws.Cells[i, "H"].Value.ToString());
                         client.email = ws.Cells[i, "I"].Value;
 
                         clients.Add(client);
@@ -109,6 +106,8 @@ namespace Template4435
                 {
                     using(Laba2ISRPOEntities context = new Laba2ISRPOEntities())
                     {
+                        context.Clients.RemoveRange(context.Clients);
+                        context.SaveChanges();
                         context.Clients.AddRange(clients);
                         context.SaveChanges();
                         MessageBox.Show("Данные импортированы");
@@ -215,7 +214,55 @@ namespace Template4435
 
         private void BtnCHELNYExportJSON_Click(object sender, RoutedEventArgs e)
         {
+            using (Laba2ISRPOEntities usersEntities = new  Laba2ISRPOEntities())
+            {
+                var allClients = usersEntities.Clients.ToList().OrderBy(s => s.Category).OrderBy(p=>p.FIO).ToList();
+                var clientsCategories = allClients.GroupBy(s => s.Category).ToList();
+                var app = new Word.Application();
+                Word.Document document = app.Documents.Add();
+                foreach (var group in clientsCategories) 
+                {
+                    Word.Paragraph paragraph = document.Paragraphs.Add();
+                    Word.Range range = paragraph.Range;
+                    range.Text = Convert.ToString(allClients.Where(g => g.Category == group.Key).FirstOrDefault().Category);
+                    paragraph.set_Style("Заголовок 1");
+                    range.InsertParagraphAfter();
 
+                    Word.Paragraph tableParagraph = document.Paragraphs.Add();
+                    Word.Range tableRange = tableParagraph.Range;
+                    Word.Table studentsTable =
+                    document.Tables.Add(tableRange, group.Count() + 1, 3);
+                    studentsTable.Borders.InsideLineStyle = studentsTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    studentsTable.Range.Cells.VerticalAlignment = Word.WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+
+                    Word.Range cellRange = studentsTable.Cell(1, 1).Range;
+                    cellRange.Text = "Код";
+                    cellRange = studentsTable.Cell(1, 2).Range;
+                    cellRange.Text = "ФИО";
+                    cellRange = studentsTable.Cell(1, 3).Range;
+                    cellRange.Text = "E-mail";
+                    studentsTable.Rows[1].Range.Bold = 1;
+                    studentsTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                    int i = 1;
+                    foreach (var currentStudent in group)
+                    {
+                        cellRange = studentsTable.Cell(i + 1, 1).Range;
+                        cellRange.Text = currentStudent.id.ToString();
+                        cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                        cellRange = studentsTable.Cell(i + 1, 2).Range;
+                        cellRange.Text = currentStudent.FIO;
+                        cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                        cellRange = studentsTable.Cell(i + 1, 3).Range;
+                        cellRange.Text = currentStudent.email;
+                        cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                        i++;
+                    }
+                    document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                }
+
+                app.Visible = true;
+            }
         }
 
         private void BtnCHELNYImportJSON_Click(object sender, RoutedEventArgs e)
@@ -235,9 +282,13 @@ namespace Template4435
                 {
                     using (StreamReader r = new StreamReader(ofd.FileName))
                     {
+                        entities.Clients.RemoveRange(entities.Clients);
+                        entities.SaveChanges();
                         string json = r.ReadToEnd();
-                        List<ClientsJSON> items = JsonConvert.DeserializeObject<List<ClientsJSON>>(json, new IsoDateTimeConverter { DateTimeFormat = "dd.MM.yyyy" });
-                        entities.ClientsJSON.AddRange(items);
+                        var options = new JsonSerializerOptions();
+                        options.Converters.Add(new CustomDateTimeConverter());
+                        List<Clients> items = JsonSerializer.Deserialize<List<Clients>>(json, options);
+                        entities.Clients.AddRange(items);
                         entities.SaveChanges();
                         MessageBox.Show("Данные импортированы");
                     }
@@ -247,6 +298,20 @@ namespace Template4435
                     MessageBox.Show(ex.Message);
                 }
             }
+        }
+    }
+
+    public class CustomDateTimeConverter : JsonConverter<DateTime>
+    {
+        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return DateTime.ParseExact(reader.GetString(), "dd.MM.yyyy", null);
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+        {
+            //Don't implement this unless you're going to use the custom converter for serialization too
+            throw new NotImplementedException();
         }
     }
 }

@@ -26,6 +26,5 @@ namespace Template4435
         }
     
         public virtual DbSet<Clients> Clients { get; set; }
-        public virtual DbSet<ClientsJSON> ClientsJSON { get; set; }
     }
 }

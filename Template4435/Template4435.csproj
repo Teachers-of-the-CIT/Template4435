@@ -110,9 +110,6 @@
     <Compile Include="Clients.cs">
       <DependentUpon>ErkashovModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ClientsJSON.cs">
-      <DependentUpon>ErkashovModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="ErkashovModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
