@@ -31,7 +31,9 @@ namespace Template4435
         }
         private void toWindowBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Мартынов Максим Дмитриевич, 19 лет, группа_4435","4435_Мартынов");
+            MartynovWindow martynovWindow = new MartynovWindow();
+            this.Hide();
+            martynovWindow.Show();
         }
         private void AzatBtn_Click(object sender, RoutedEventArgs e)
         {

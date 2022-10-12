@@ -1,0 +1,27 @@
+﻿<Window x:Class="Template4435.MartynovWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Template4435"
+        mc:Ignorable="d"
+        Title="MartynovWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="129*"/>
+        </Grid.RowDefinitions>
+        <Button
+            x:Name="ImportBtn"
+            Click="ImportBtn_Click"
+            Content="Импорт данных" 
+            ></Button>
+        <Button
+            x:Name="ExportBtn"
+            Click="ExportBtn_Click"
+            Content="Экспорт данных"
+            Grid.Row="1"
+            ></Button>
+    </Grid>
+</Window>
