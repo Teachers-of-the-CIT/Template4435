@@ -48,7 +48,7 @@
         <Button x:Name="AzatBtn" Click="AzatBtn_Click"  Content="Задача 23" Grid.Row="23" Grid.ColumnSpan="2" Margin="0,0,0,29" Grid.RowSpan="2"></Button>
         <Button x:Name="LR1_Shumilkin" Click="LR1_Shumilkin_Click" Content="КОНЕЦ! Шумилкин А.О." Grid.Row="15" Grid.ColumnSpan="2" Margin="0,0,0,29" Grid.RowSpan="2" />
         <Button x:Name="BnnTask" Click="BnnTask_Click" Content="Задача" Grid.Row="11" Grid.ColumnSpan="2" Margin="0,29,0,29" Grid.RowSpan="3"></Button>
-        <StackPanel  Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2" Margin="0,29,0,0" Grid.RowSpan="2">
+        <StackPanel  Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2">
             <Button x:Name="BtnCHELNY" Click="BtnCHELNY_Click"   Content="ЧЕЛНЫ ТОП " Margin="10 0"></Button>
             <Button x:Name="BtnCHELNYImport" Click="BtnCHELNYImport_Click" Content="ЧЕЛНЫ ТОП Импорт" Margin="10 0"></Button>
             <Button x:Name="BtnCHELNYExport" Click="BtnCHELNYExport_Click" Content="ЧЕЛНЫ ТОП Экспорт" Margin="10 0"></Button>
@@ -56,6 +56,12 @@
             <Button x:Name="BtnCHELNYExportJSON" Click="BtnCHELNYExportJSON_Click" Content="ЧЕЛНЫ ТОП Экспорт DOCX" Margin="10 0"></Button>
         </StackPanel>
 
-        <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Grid.Row="5" Grid.ColumnSpan="2" Margin="0,29,0,0" Grid.RowSpan="2"></Button>
+        <StackPanel Grid.Row="5"  Grid.ColumnSpan="2"  Orientation="Horizontal">
+            <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Margin="10 0"></Button>
+            <Button x:Name="ExcelImportBut"  Content="RHFDXTYRJ BVGJHN" Margin="10 0" Background="#FF2CF751" Click="ExcelImportBut_Click"></Button>
+            <Button x:Name="ExcelExportBut"  Content="RHFDXTYRJ 'RCGJHN" Margin="10 0" Background="#FFFF4646" Click="ExcelExportBut_Click"></Button>
+            <Button   Content="RHFDXTYRJ BVGJHN ОЫЩТ" Margin="10 0" Background="#FF575757"></Button>
+            <Button   Content="RHFDXTYRJ 'RCGJHN ВЩСЧ" Margin="10 0" Background="#FF29B1FF"></Button>
+        </StackPanel>
     </Grid>
 </Window>

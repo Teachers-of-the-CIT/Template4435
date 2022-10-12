@@ -299,6 +299,115 @@ namespace Template4435
                 }
             }
         }
+
+        private void ExcelImportBut_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                DefaultExt = "*.xls;*.xlsx",
+                Filter = "файл Excel (Spisok.xlsx)|*.xlsx",
+                Title = "Выберите файл базы данных"
+            };
+            if (!(ofd.ShowDialog() == true))
+                return;
+
+            string[,] list;
+            Excel.Application ObjWorkExcel = new Excel.Application();
+            Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName);
+            Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1];
+
+            var lastCell = ObjWorkSheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell);
+            int _columns = (int)lastCell.Column;
+            int _rows = (int)lastCell.Row;
+            list = new string[_rows, _columns];
+            for (int j = 0; j < _columns; j++)
+                for (int i = 0; i < _rows; i++)
+                    list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text;
+            ObjWorkBook.Close(false, Type.Missing, Type.Missing);
+            ObjWorkExcel.Quit();
+            GC.Collect();
+            try
+            {
+                using (isproBDEntities isproBD = new isproBDEntities())
+                {
+                    if (isproBD.Emloyee.FirstOrDefault() != null)
+                    {
+                         isproBD.Emloyee.RemoveRange(isproBD.Emloyee.ToList());
+                         isproBD.SaveChanges();
+                    }
+                    for (int i = 1; i < _rows; i++)
+                    {
+                        isproBD.Emloyee.Add(new Emloyee() { Id = Convert.ToInt32(list[i, 0].Remove(0, 3)), Post = list[i, 1], FIO = list[i, 2], Login = list[i, 3], Password = list[i, 4], LastEnt = list[i, 5], Ent = list[i, 6] });
+                    }
+                        isproBD.SaveChanges();
+                }
+                MessageBox.Show("Данные успешно импортированы");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ExcelExportBut_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<string, List<Emloyee>> keyValues = new Dictionary<string, List<Emloyee>>(); 
+            using (isproBDEntities isproBD = new isproBDEntities())
+            {
+                if (isproBD.Emloyee.FirstOrDefault() == null)
+                {
+                    MessageBox.Show("База данный пуста!");
+                    return;
+                }
+                foreach(Emloyee em in isproBD.Emloyee)
+                {
+                    if (!keyValues.ContainsKey(em.Post))
+                    {
+                        keyValues.Add(em.Post, new List<Emloyee>() {em });
+                    }
+                    else
+                    {
+                        keyValues[em.Post].Add(em);
+                    }
+                }
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "файл Excel (Spisok.xlsx)|*.xlsx";
+            if (saveFileDialog.ShowDialog() == false)
+                return;
+
+            var app = new Excel.Application();
+            app.SheetsInNewWorkbook = keyValues.Count();
+            Excel.Workbook workbook = app.Workbooks.Add(Type.Missing);
+
+            for (int i = 0; i < keyValues.Count(); i++)
+            {
+                string key = keyValues.Keys.ToArray()[i];
+                Excel.Worksheet worksheet = app.Worksheets.Item[i+1];
+                worksheet.Cells[1][1] = "Id";
+                worksheet.Cells[2][1] = "Фио";
+                worksheet.Cells[3][1] = "Логин";
+                int j = 2;
+                foreach (Emloyee emp in keyValues[key])
+                {
+                    worksheet.Cells[1][j] = emp.Id.ToString();
+                    worksheet.Cells[2][j] = emp.FIO;
+                    worksheet.Cells[3][j] = emp.Login;
+                    j++;
+                }
+                worksheet.Columns.AutoFit();
+                worksheet.Name = key;
+
+            }
+
+            if (saveFileDialog.FileName != "")
+            {
+                workbook.SaveAs(saveFileDialog.FileName);
+                workbook.Close();
+                Process.Start(saveFileDialog.FileName);
+            }
+        }
     }
 
     public class CustomDateTimeConverter : JsonConverter<DateTime>
