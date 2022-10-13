@@ -166,6 +166,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Image\1.ico" />
     <Content Include="Model\UsersModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UsersModel.Context.cs</LastGenOutput>

@@ -6,22 +6,45 @@
         xmlns:local="clr-namespace:Template4435"
         mc:Ignorable="d"
         Title="MartynovWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Verdana"></Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="39*"/>
             <RowDefinition Height="49*"/>
             <RowDefinition Height="129*"/>
         </Grid.RowDefinitions>
-        <Button
-            x:Name="ImportBtn"
-            Click="ImportBtn_Click"
-            Content="Импорт данных" 
+        <TextBlock
+            FontFamily="Verdana"
+            FontSize="24"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Мартынов Максим Дмитриевич. гр.4435, вариант №10"
+            >
+        </TextBlock>
+        <StackPanel
+                Orientation="Horizontal"
+                Grid.Row="1"
+            >
+            <Image Source="Image/1.ico" Margin="20 0 0 0"/>
+            <Button
+                x:Name="ImportBtn"
+                Click="ImportBtn_Click"
+                Content="Импорт данных"
+                Margin="20 0 0 0"
+                Background="LightGreen"
+            >
+            </Button>
+            <Button
+                x:Name="ExportBtn"
+                Click="ExportBtn_Click"
+                Content="Экспорт данных"
+                Margin="20 0 0 0"
+                Background="LightGreen"
             ></Button>
-        <Button
-            x:Name="ExportBtn"
-            Click="ExportBtn_Click"
-            Content="Экспорт данных"
-            Grid.Row="1"
-            ></Button>
+        </StackPanel>
     </Grid>
 </Window>
