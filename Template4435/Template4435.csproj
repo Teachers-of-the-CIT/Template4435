@@ -109,6 +109,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>KravchnkoModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Employee.cs" />
     <Compile Include="sysdiagrams.cs">
       <DependentUpon>KravchnkoModel.tt</DependentUpon>
     </Compile>

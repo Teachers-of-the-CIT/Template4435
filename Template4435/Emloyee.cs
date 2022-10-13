@@ -14,12 +14,6 @@ namespace Template4435
     
     public partial class Emloyee
     {
-        public int Id { get; set; }
-        public string Post { get; set; }
-        public string FIO { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string LastEnt { get; set; }
-        public string Ent { get; set; }
+
     }
 }

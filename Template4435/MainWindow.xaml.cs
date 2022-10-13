@@ -20,6 +20,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Runtime.InteropServices;
 
 namespace Template4435
 {
@@ -300,6 +301,14 @@ namespace Template4435
             }
         }
 
+        [DllImport("user32.dll")]
+        static extern int GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
+        static Process GetExcelProcess(Excel.Application excelApp)
+        {
+            GetWindowThreadProcessId(excelApp.Hwnd, out int id);
+            return Process.GetProcessById(id);
+        }
+
         private void ExcelImportBut_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog()
@@ -325,6 +334,14 @@ namespace Template4435
                     list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text;
             ObjWorkBook.Close(false, Type.Missing, Type.Missing);
             ObjWorkExcel.Quit();
+            /*
+            ObjWorkBook = null;
+            ObjWorkExcel = null;
+            ObjWorkSheet = null;
+            lastCell = null;
+            */
+            Process process = GetExcelProcess(ObjWorkExcel);
+            process.Kill();
             GC.Collect();
             try
             {
@@ -337,7 +354,7 @@ namespace Template4435
                     }
                     for (int i = 1; i < _rows; i++)
                     {
-                        isproBD.Emloyee.Add(new Emloyee() { Id = Convert.ToInt32(list[i, 0].Remove(0, 3)), Post = list[i, 1], FIO = list[i, 2], Login = list[i, 3], Password = list[i, 4], LastEnt = list[i, 5], Ent = list[i, 6] });
+                        isproBD.Emloyee.Add(new Emloyee() { CodeStaff = list[i, 0], Post = list[i, 1], FIO = list[i, 2], Login = list[i, 3], Password = list[i, 4], LastEnt = list[i, 5], Ent = list[i, 6] });
                     }
                         isproBD.SaveChanges();
                 }
@@ -407,6 +424,130 @@ namespace Template4435
                 workbook.Close();
                 Process.Start(saveFileDialog.FileName);
             }
+
+            app.Quit();
+        }
+
+        private void JsonImport_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                DefaultExt = "*.json",
+                Filter = "файл Json|*.json",
+                Title = "Выберите файл Json"
+            };
+            if (!(ofd.ShowDialog() == true))
+                return;
+
+            using (isproBDEntities isproBD = new isproBDEntities())
+            {
+                List<Emloyee> listE;
+                using (StreamReader r = new StreamReader(ofd.FileName))
+                {
+                    string s = r.ReadToEnd();
+                    listE = JsonSerializer.Deserialize<List<Emloyee>>(s, new JsonSerializerOptions());
+                }
+                if (isproBD.Emloyee.FirstOrDefault() != null)
+                {
+                    isproBD.Emloyee.RemoveRange(isproBD.Emloyee.ToList());
+                    isproBD.SaveChanges();
+                }
+                isproBD.Emloyee.AddRange(listE);
+                isproBD.SaveChanges();
+                MessageBox.Show("Данные успешно импортированы");
+            }
+        }
+
+        private void ExportWord_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<string, List<Emloyee>> keyValues = new Dictionary<string, List<Emloyee>>();
+            using (isproBDEntities isproBD = new isproBDEntities())
+            {
+                if (isproBD.Emloyee.FirstOrDefault() == null)
+                {
+                    MessageBox.Show("База данный пуста!");
+                    return;
+                }
+                foreach (Emloyee em in isproBD.Emloyee)
+                {
+                    if (!keyValues.ContainsKey(em.Post))
+                    {
+                        keyValues.Add(em.Post, new List<Emloyee>() { em });
+                    }
+                    else
+                    {
+                        keyValues[em.Post].Add(em);
+                    }
+                }
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "файл Word (Word.docx)|*.docx";
+            if (saveFileDialog.ShowDialog() == false)
+                return;
+
+            var app = new Word.Application();
+            Word.Document document = app.Documents.Add();
+
+            Word.Paragraph paragraph = document.Paragraphs.Add();
+            
+            foreach(string key in keyValues.Keys)
+            {
+                //Заголовок
+                Word.Paragraph Zagolovok = document.Paragraphs.Add();
+                Zagolovok.Range.Text = key;
+                Zagolovok.Range.InsertParagraphAfter();
+
+                //Cоздание и форматирование таблицы
+                Word.Paragraph tableParagraph = document.Paragraphs.Add();
+                Word.Range tableRange = tableParagraph.Range;
+                Word.Table EmployeeTable = document.Tables.Add(tableRange, keyValues[key].Count + 1, 3);
+                EmployeeTable.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                EmployeeTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+
+
+                //Название строк
+                Word.Range cellRange;
+                cellRange = EmployeeTable.Cell(1, 1).Range;
+                cellRange.Text = "ID";
+                cellRange = EmployeeTable.Cell(1, 2).Range;
+                cellRange.Text = "ФИО";
+                cellRange = EmployeeTable.Cell(1, 3).Range;
+                cellRange.Text = "Логин";
+                EmployeeTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                //Заполнение
+                int i = 1;
+                foreach (Emloyee CurEmloyee in keyValues[key])
+                {
+                    cellRange = EmployeeTable.Cell(i + 1, 1).Range;
+                    cellRange.Text = CurEmloyee.Id.ToString();
+                    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                    cellRange = EmployeeTable.Cell(i + 1, 2).Range;
+                    cellRange.Text = CurEmloyee.FIO;
+                    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                    cellRange = EmployeeTable.Cell(i + 1, 3).Range;
+                    cellRange.Text = CurEmloyee.Login;
+                    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    i++;
+                }
+
+                Word.Paragraph countEmployeeParagraph = document.Paragraphs.Add();
+                Word.Range countStudentsRange = countEmployeeParagraph.Range;
+                countStudentsRange.Text = $"Количество сотрудников по должности - {keyValues[key].Count()}";
+                countStudentsRange.Font.Color = Word.WdColor.wdColorDarkRed;
+                countStudentsRange.InsertParagraphAfter();
+                document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+            }
+
+            if (saveFileDialog.FileName != "")
+            {
+                document.SaveAs(saveFileDialog.FileName);
+                Process.Start(saveFileDialog.FileName);
+            }
+            app.Quit();
         }
     }
 

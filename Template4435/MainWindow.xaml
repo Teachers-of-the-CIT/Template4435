@@ -60,8 +60,8 @@
             <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Margin="10 0"></Button>
             <Button x:Name="ExcelImportBut"  Content="RHFDXTYRJ BVGJHN" Margin="10 0" Background="#FF2CF751" Click="ExcelImportBut_Click"></Button>
             <Button x:Name="ExcelExportBut"  Content="RHFDXTYRJ 'RCGJHN" Margin="10 0" Background="#FFFF4646" Click="ExcelExportBut_Click"></Button>
-            <Button   Content="RHFDXTYRJ BVGJHN ОЫЩТ" Margin="10 0" Background="#FF575757"></Button>
-            <Button   Content="RHFDXTYRJ 'RCGJHN ВЩСЧ" Margin="10 0" Background="#FF29B1FF"></Button>
+            <Button x:Name="JsonImport"  Content="RHFDXTYRJ BVGJHN ОЫЩТ" Margin="10 0" Background="#FF575757" Click="JsonImport_Click"></Button>
+            <Button x:Name="ExportWord"  Content="RHFDXTYRJ 'RCGJHN ВЩСЧ" Margin="10 0" Background="#FF29B1FF" Click="ExportWord_Click"></Button>
         </StackPanel>
     </Grid>
 </Window>
