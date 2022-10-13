@@ -66,7 +66,7 @@ namespace Template4435
 
         private void Aigulyash_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Автор: Хайруллина Айгуль Рафисовна", "4435_Хайруллина_Айгуль");
+            MessageBox.Show("Хайруллина Айгуль Рафисовна, 19 лет", "4435_Хайруллина_Айгуль");
         }
     }
 }
