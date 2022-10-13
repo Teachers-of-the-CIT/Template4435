@@ -63,5 +63,15 @@ namespace Template4435
         {
             MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
         }
+
+        private void butty_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Муратаева Элина Эдуардовна, 19 лет", "4435_Муратаева");
+        }
+
+        private void butty2_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Макарова Оксана Артемовна, 19 лет", "4435_Макарова");
+        }
     }
 }
