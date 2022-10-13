@@ -63,5 +63,10 @@ namespace Template4435
         {
             MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
         }
+
+        private void Aigulyash_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Хайруллина Айгуль Рафисовна", "4435_Хайруллина_Айгуль");
+        }
     }
 }
