@@ -38,7 +38,7 @@
             <RowDefinition Height="*"></RowDefinition>
 
         </Grid.RowDefinitions>
-        
+        <Button x:Name="Btn" Click="Btn_Click" Content="4435 Багаутинова" Grid.Row="2"></Button>
         <Button x:Name="BnTask" Click="BnTask_Click" Content="Задача" Grid.Row="14"></Button>
         <Button x:Name="toWindowBtn" Click="toWindowBtn_Click" Content="Мартынов Максим Задача" Grid.Row="9"></Button>
         <Button x:Name="AzatBtn" Click="AzatBtn_Click"  Content="Задача 23" Grid.Row="23"></Button>
