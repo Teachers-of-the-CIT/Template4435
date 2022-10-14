@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Template4435
 {
@@ -67,6 +69,39 @@ namespace Template4435
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Автор: Багаутинова Софья Вахтанговна", "4435_Багаутинова_Софья");
+        }
+
+        private void BtnImport_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                DefaultExt = "*.xls;*.xlsx",
+                Filter = "файл Excel (Spisok.xlsx)|*.xlsx",
+                Title = "Выберите файл базы данных"
+            };
+            if (!(ofd.ShowDialog() == true))
+                return;
+            string[,] list; // массив для хранения данных из xlsx-файла
+            Excel.Application ObjWorkExcel = new Excel.Application(); // экземпляр класса для работы с библитекй Introp
+            Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName); // экземпляр класса для загрузки документа формата xlsx для работы с электронными таблицами
+            Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1]; //выбор xlsx-файла для дальнейшей работы с ним
+            var lastCell = ObjWorkSheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell); // определение последней ячейки таблицы
+            int _columns = (int)lastCell.Column;
+            int _rows = (int)lastCell.Row;
+            list = new string[_rows, _columns];
+            for (int j = 0; j < _columns; j++)
+            {
+                for (int i = 0; i < _rows; i++)
+                    list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text;
+            }
+            ObjWorkBook.Close(false, Type.Missing, Type.Missing);
+            ObjWorkExcel.Quit();
+            GC.Collect();
+        }
+
+        private void BtnExport_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
