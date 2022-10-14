@@ -38,7 +38,9 @@
             <RowDefinition Height="*"></RowDefinition>
 
         </Grid.RowDefinitions>
-        <Button x:Name="Btn" Click="Btn_Click" Content="4435 Багаутинова" Grid.Row="2"></Button>
+        <Button x:Name="Btn" Click="Btn_Click" Content="4435 Багаутинова" Grid.Row="2" Width="100" HorizontalAlignment="Left"></Button>
+        <Button x:Name="BtnImport" Click="BtnImport_Click" Content="Импорт данных" Grid.Row="2" Width="100" HorizontalAlignment="Center"></Button>
+        <Button x:Name="BtnExport" Click="BtnExport_Click" Content="Экспорт данных" Grid.Row="2" Width="100" HorizontalAlignment="Right"></Button>
         <Button x:Name="BnTask" Click="BnTask_Click" Content="Задача" Grid.Row="14"></Button>
         <Button x:Name="toWindowBtn" Click="toWindowBtn_Click" Content="Мартынов Максим Задача" Grid.Row="9"></Button>
         <Button x:Name="AzatBtn" Click="AzatBtn_Click"  Content="Задача 23" Grid.Row="23"></Button>
