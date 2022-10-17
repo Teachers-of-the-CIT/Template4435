@@ -11,13 +11,18 @@ namespace Template4435.Model
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Text.Json.Serialization;
+
     public partial class User
     {
         public int Id { get; set; }
+        [JsonPropertyName("FullName")]
         public string FIO { get; set; }
+        [JsonPropertyName("Position")]
         public string Role { get; set; }
+        [JsonPropertyName("Log")]
         public string Login { get; set; }
+        [JsonPropertyName("Password")]
         public string Password { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,14 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Template4435.Model;
 using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
+using System.Text.Json;
 
 namespace Template4435
 {
@@ -34,7 +38,7 @@ namespace Template4435
             OpenFileDialog ofd = new OpenFileDialog()
             {
                 DefaultExt = "*.xls;*.xlsx",
-                Filter = "файлы Excel |*.xlsx",
+                Filter = "Excel files |*.xlsx| All files(*.*)|*.*",
                 Title = "Выберите Excel файл"
             };
             if (!(ofd.ShowDialog() == true))
@@ -117,6 +121,77 @@ namespace Template4435
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
 
             return Convert.ToBase64String(hash);
+        }
+
+        private void ImportJSONBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var users = new List<User>();
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                DefaultExt = "*.json;*.json",
+                Filter = "JSON files |*.json| All files(*.*)|*.*",
+                Title = "Выберите JSON файл"
+            };
+            if (!(ofd.ShowDialog() == true))
+                return;
+            using (FileStream fs = new FileStream($"{ofd.FileName}", FileMode.Open))
+            {
+                users = JsonSerializer.Deserialize<List<User>>(fs);
+            }
+            foreach (var user in users)
+            {
+                UsersEntities.GetContext().Users.Add(user);
+            }
+            UsersEntities.GetContext().SaveChanges();
+        }
+
+        private void ExportWordBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var roles = UsersEntities.GetContext().Users
+               .ToList()
+               .GroupBy(r => r.Role)
+               .ToList();
+            var users = UsersEntities.GetContext().Users
+                .ToList()
+                .OrderBy(u => u.Role)
+                .ToList();
+            var app = new Word.Application();
+            Word.Document document = app.Documents.Add();
+
+            foreach (var role in roles)
+            {
+                Word.Paragraph paragraph = document.Paragraphs.Add();
+                Word.Range range = paragraph.Range;
+                range.Text = Convert.ToString(role.Key + "ы");
+                paragraph.set_Style("Заголовок 1");
+                range.InsertParagraphAfter();
+                Word.Paragraph tableParagraph = document.Paragraphs.Add();
+                Word.Range tableRange = tableParagraph.Range;
+                Word.Table usersTable = document.Tables.Add(tableRange,  UsersEntities.GetContext().Users.ToList().Where(x => x.Role == role.Key).Count() + 1, 2);
+                usersTable.Borders.InsideLineStyle = usersTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+
+                Word.Range cellRange = usersTable.Cell(1, 1).Range;
+                cellRange.Text = "Логин";
+                cellRange = usersTable.Cell(1, 2).Range;
+                cellRange.Text = "Пароль";
+
+                int i = 1;
+                foreach (var user in users)
+                {
+                    if (role.Key == user.Role)
+                    {
+                        cellRange = usersTable.Cell(i + 1, 1).Range;
+                        cellRange.Text = user.Login.ToString();
+                        cellRange = usersTable.Cell(i + 1, 2).Range;
+                        cellRange.Text = GetHash(user.Password);
+                        i++;
+                    }
+                   
+                }
+                usersTable.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                usersTable.Rows[1].Range.Bold = 1;
+            }
+            app.Visible = true;
         }
     }
 }
