@@ -48,5 +48,7 @@
         <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Grid.Row="6"></Button>
         <Button x:Name="Maximov" Click="Maximov_Click" Content="Maximov " Grid.Row="16" />
         <Button  x:Name="Adieva"  Grid.Row="10" Content="Адиева" Click="Adieva_Click"  />
+        <Button  x:Name="Saifutdinova"  Grid.Row="7" Content="Сайфутдинова" Click="Saifutdinova_Click"  />
+        <Button  x:Name="Safina"  Grid.Row="8" Content="Сафина" Click="Safina_Click"  />
     </Grid>
 </Window>

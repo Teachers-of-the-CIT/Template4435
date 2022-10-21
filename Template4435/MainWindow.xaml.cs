@@ -63,5 +63,15 @@ namespace Template4435
         {
             MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
         }
+
+        private void Saifutdinova_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Сайфутдинова Диляра Искадеровна, 19", "4435_Сайфутдинова");
+        }
+
+        private void Safina_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Сафина Яна Робертовна, 19", "4435_Сафина");
+        }
     }
 }
