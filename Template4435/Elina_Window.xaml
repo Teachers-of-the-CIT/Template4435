@@ -18,8 +18,8 @@
             <Label>Группа 4435</Label>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <Button x:Name="import">Импорт данных</Button>
-            <Button x:Name="export">Экспорт в Excel</Button>
+            <Button x:Name="btn_import" Click="btn_import_Click">Импорт данных</Button>
+            <Button x:Name="btn_export" Click="btn_export_Click">Экспорт в Excel</Button>
         </StackPanel>
     </Grid>
 </Window>

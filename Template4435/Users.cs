@@ -21,10 +21,5 @@ namespace Template4435
         public string Pass { get; set; }
         public string Last_ent { get; set; }
         public string Type_ent { get; set; }
-
-        internal static object GroupBy(Func<object, object> value)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
