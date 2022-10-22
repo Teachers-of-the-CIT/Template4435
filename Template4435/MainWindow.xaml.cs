@@ -66,12 +66,17 @@ namespace Template4435
 
         private void butty_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Автор: Муратаева Элина Эдуардовна, 19 лет", "4435_Муратаева");
+            Elina_Window elina = new Elina_Window();
+            elina.Show();
+            this.Close();
         }
 
         private void butty2_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Автор: Макарова Оксана Артемовна, 19 лет", "4435_Макарова");
+            Oksana_Window oksana = new Oksana_Window();
+            oksana.Show(); 
+            this.Close();
+
         }
     }
 }

@@ -1,0 +1,25 @@
+﻿<Window x:Class="Template4435.Oksana_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Template4435"
+        mc:Ignorable="d"
+        Title="Oksana_Window" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition>
+            </RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Label>Автор: Макарова Оксана Артемовна</Label>
+            <Label>19 лет</Label>
+            <Label>Группа 4435</Label>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <Button x:Name="btnImport" Click="btnImport_Click">Импорт данных</Button>
+            <Button x:Name="btnExport"  Click="btnExport_Click">Экспорт в Excel</Button>
+        </StackPanel>
+    </Grid>
+</Window>
