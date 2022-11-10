@@ -33,7 +33,7 @@ namespace Template4435
         }
         private void BnnTask_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Автор: Назмутдинов Рузаль Ильгизович", "4435_Назмутдинов_Рузаль");
+            MessageBox.Show("Автор: Назмутдинов Рузаль Ильгиович", "4435_Назмутдинов_Рузаль");
         }
 
         private void ImportB_Click(object sender, RoutedEventArgs e)
