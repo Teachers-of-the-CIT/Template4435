@@ -12,14 +12,12 @@ namespace Template4435
     using System;
     using System.Collections.Generic;
     
-    public partial class Positions
+    public partial class Services
     {
-        public int ID_Employee { get; set; }
-        public string Positions1 { get; set; }
-        public string FullName { get; set; }
-        public string Employee_Login { get; set; }
-        public string Employee_Password { get; set; }
-        public string Last_Entrance { get; set; }
-        public string Type_Of_Entrance { get; set; }
+        public int ID { get; set; }
+        public string Name_Of_Services { get; set; }
+        public string Type_Of_Services { get; set; }
+        public string Code_Of_Services { get; set; }
+        public string Price { get; set; }
     }
 }

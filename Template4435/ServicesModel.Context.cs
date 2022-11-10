@@ -13,10 +13,10 @@ namespace Template4435
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EmployeeEntities : DbContext
+    public partial class ServicesEntities : DbContext
     {
-        public EmployeeEntities()
-            : base("name=EmployeeEntities")
+        public ServicesEntities()
+            : base("name=ServicesEntities")
         {
         }
     
@@ -25,6 +25,6 @@ namespace Template4435
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Positions> Positions { get; set; }
+        public virtual DbSet<Services> Services { get; set; }
     }
 }

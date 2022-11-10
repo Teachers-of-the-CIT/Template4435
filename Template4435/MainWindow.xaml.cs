@@ -97,6 +97,23 @@ namespace Template4435
             ObjWorkBook.Close(false, Type.Missing, Type.Missing);
             ObjWorkExcel.Quit();
             GC.Collect();
+
+            using (EmployeeEntities1 employeEntities = new EmployeeEntities1())
+            {
+                for (int i = 0; i < _rows; i++)
+                {
+                    EmployeeEntities1.Position.Add(new Position()
+                    {
+                        Positions1 = list[i, 1],
+                        FullName = list[i, 2],
+                        Employee_Login = list[i, 3],
+                        Employee_Password = list[i, 4],
+                        Last_Entrance = list[i, 5],
+                        Type_Of_Entrance = list[i, 6]
+                    });
+                }
+                employeEntities.SaveChanges();
+            }
         }
 
         private void BtnExport_Click(object sender, RoutedEventArgs e)
