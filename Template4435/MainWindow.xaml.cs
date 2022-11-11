@@ -66,7 +66,7 @@ namespace Template4435
 
         private void KhaertdinovDGButtonClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Автор: Хаертдинов Данил Гранитович", "4435_Хаертдинов");
+            new KhaertdinovDGWindow().Show();//in production show dialog
         }
     }
 }
