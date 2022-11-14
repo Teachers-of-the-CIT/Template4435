@@ -5,12 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Template4435"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="400" MinHeight="400" MinWidth="400">
+        Title="MainWindow" Height="600" Width="800" MinHeight="400" MinWidth="400">
     <Grid>
-        <UniformGrid Columns="3" Rows="1">
-            <Button x:Name="Btn"  Click="Btn_Click" Content="4435 Багаутинова" Grid.Row="2" Width="Auto" HorizontalAlignment="Left" Height="100"></Button>
-            <Button x:Name="BtnImport" Click="BtnImport_Click" Content="Импорт данных" Grid.Row="2" Width="Auto" HorizontalAlignment="Center" Height="100"></Button>
-            <Button x:Name="BtnExport" Click="BtnExport_Click" Content="Экспорт данных" Grid.Row="2" Width="Auto" HorizontalAlignment="Right" Height="100"></Button>
-        </UniformGrid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="120"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <DataGrid x:Name="Employee" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="440"  IsReadOnly="True" VerticalAlignment="Top" Width="790" SelectionChanged="Employee_SelectionChanged" BorderBrush="#FFD1E5D8" Background="#FFD1E5D8">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Code_Employee}" Header="Код" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding Positions}" Header="Должность" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding FullName}" Header="ФИО" Width="*"/>
+                    <DataGridTextColumn Binding="{Binding Employee_Login}" Header="Логин" Width="*"/>
+                    <DataGridTextColumn   Binding="{Binding Employee_Password}" Header="Пароль" Width="*"/>
+                    <DataGridTextColumn   Binding="{Binding Last_Entrance}" Header="Последний вход" Width="*"/>
+                    <DataGridTextColumn   Binding="{Binding Type_Of_Entrance}" Header="Тип входа" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Button x:Name="Btn"  Click="Btn_Click" Content="4435 Багаутинова" HorizontalAlignment="Left" Margin="150, 0" ></Button>
+            <Button x:Name="BtnImport" Click="BtnImport_Click" Content="Импорт данных" HorizontalAlignment="Center" ></Button>
+            <Button x:Name="BtnExport" Click="BtnExport_Click" Content="Экспорт данных" HorizontalAlignment="Right" Margin="150, 0" ></Button>
+        </Grid>
+        <Grid Grid.Row="2">
+            <UniformGrid Columns="2" Rows="1">
+                <Button x:Name="ImportJSON"  Click="ImportJSON_Click" Content="Импорт JSON данных" HorizontalAlignment="Right" Margin="30, 0"></Button>
+                <Button x:Name="ExportJSON" Click="ExportJSON_Click" Content="Экспорт в Word" HorizontalAlignment="Left" Margin="50, 0"></Button>
+            </UniformGrid>
+        </Grid>
     </Grid>
 </Window>

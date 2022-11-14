@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:Template4435"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="Auto"></Setter>
+            <Setter Property="Height" Value="70"></Setter>
+            <Setter Property="Background" Value="#FFD1E5D8"></Setter>
+            <Setter Property="BorderBrush" Value="#FFD1E5D8"></Setter>
+        </Style>
     </Application.Resources>
 </Application>

@@ -11,15 +11,35 @@ namespace Template4435
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Text.Json.Serialization;
+
     public partial class Position
     {
+        [JsonPropertyName("CodeStaff")]
         public string Code_Employee { get; set; }
+
+
+        [JsonPropertyName("Position")]
         public string Positions { get; set; }
+
+
+        [JsonPropertyName("FullName")]
         public string FullName { get; set; }
+
+
+        [JsonPropertyName("Log")]
         public string Employee_Login { get; set; }
+
+
+        [JsonPropertyName("Password")]
         public string Employee_Password { get; set; }
+
+
+        [JsonPropertyName("LastEnter")]
         public string Last_Entrance { get; set; }
+
+
+        [JsonPropertyName("TypeEnter")]
         public string Type_Of_Entrance { get; set; }
     }
 }
