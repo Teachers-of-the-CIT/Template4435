@@ -5,50 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Template4435"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="400" MinHeight="800" MinWidth="400">
+        Title="MainWindow" Height="400" Width="400" MinHeight="400" MinWidth="400">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-
-        </Grid.RowDefinitions>
-        <Button x:Name="Btn" Click="Btn_Click" Content="4435 Багаутинова" Grid.Row="2" Width="100" HorizontalAlignment="Left"></Button>
-        <Button x:Name="BtnImport" Click="BtnImport_Click" Content="Импорт данных" Grid.Row="2" Width="100" HorizontalAlignment="Center"></Button>
-        <Button x:Name="BtnExport" Click="BtnExport_Click" Content="Экспорт данных" Grid.Row="2" Width="100" HorizontalAlignment="Right"></Button>
-        <Button x:Name="BnTask" Click="BnTask_Click" Content="Задача" Grid.Row="14"></Button>
-        <Button x:Name="toWindowBtn" Click="toWindowBtn_Click" Content="Мартынов Максим Задача" Grid.Row="9"></Button>
-        <Button x:Name="AzatBtn" Click="AzatBtn_Click"  Content="Задача 23" Grid.Row="23"></Button>
-        <Button x:Name="LR1_Shumilkin" Click="LR1_Shumilkin_Click" Content="КОНЕЦ! Шумилкин А.О." Grid.Row="15" />
-        <Button x:Name="BnnTask" Click="BnnTask_Click" Content="Задача" Grid.Row="12"></Button>
-        <Button x:Name="BtnCHELNY" Click="BtnCHELNY_Click"   Content="ЧЕЛНЫ ТОП " Grid.Row="4"></Button>
-        <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Grid.Row="6"></Button>
-        <Button x:Name="Maximov" Click="Maximov_Click" Content="Maximov " Grid.Row="16" />
-        <Button  x:Name="Adieva"  Grid.Row="10" Content="Адиева" Click="Adieva_Click"  />
+        <UniformGrid Columns="3" Rows="1">
+            <Button x:Name="Btn"  Click="Btn_Click" Content="4435 Багаутинова" Grid.Row="2" Width="Auto" HorizontalAlignment="Left" Height="100"></Button>
+            <Button x:Name="BtnImport" Click="BtnImport_Click" Content="Импорт данных" Grid.Row="2" Width="Auto" HorizontalAlignment="Center" Height="100"></Button>
+            <Button x:Name="BtnExport" Click="BtnExport_Click" Content="Экспорт данных" Grid.Row="2" Width="Auto" HorizontalAlignment="Right" Height="100"></Button>
+        </UniformGrid>
     </Grid>
 </Window>

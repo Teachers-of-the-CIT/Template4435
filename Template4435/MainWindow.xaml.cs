@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,46 +27,6 @@ namespace Template4435
         {
             InitializeComponent();
         }
-
-        private void BnTask_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Автор: Сабиров Зульфат Зуфарович","4435_Сабиров_Зульфат");
-        }
-        private void toWindowBtn_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Мартынов Максим Дмитриевич, 19 лет, группа_4435","4435_Мартынов");
-        }
-        private void AzatBtn_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Автор: Хакимзянов Азат Гайсович", "4435_Хакимзянов_Азат");
-        }
-        private void BnnTask_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Автор: Назмутдинов Рузаль Ильгизович", "4435_Назмутдинов_Рузаль");
-        }
-        private void BtnCHELNY_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("ЕРКАШОВ 4435 19", "4435_ЕРКАШОВ");
-        }
-        private void BtnNikita_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("КРАВЧЕНКО 4435 16", "4435_КРАВЧЕНКО");
-        }
-        private void LR1_Shumilkin_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Автор: Шумилкин Александр Олегович", "4435_Шумилкин_Александр");
-        }
-
-        private void Maximov_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Автор: Максимов Роман Сергеевич", "4435_Максимов_Роман");
-        }
-
-        private void Adieva_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
-        }
-
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Автор: Багаутинова Софья Вахтанговна", "4435_Багаутинова_Софья");
@@ -81,6 +42,7 @@ namespace Template4435
             };
             if (!(ofd.ShowDialog() == true))
                 return;
+
             string[,] list; // массив для хранения данных из xlsx-файла
             Excel.Application ObjWorkExcel = new Excel.Application(); // экземпляр класса для работы с библитекй Introp
             Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName); // экземпляр класса для загрузки документа формата xlsx для работы с электронными таблицами
@@ -91,20 +53,21 @@ namespace Template4435
             list = new string[_rows, _columns];
             for (int j = 0; j < _columns; j++)
             {
-                for (int i = 0; i < _rows; i++)
+                for (int i = 1; i < _rows; i++)
                     list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text;
             }
             ObjWorkBook.Close(false, Type.Missing, Type.Missing);
             ObjWorkExcel.Quit();
             GC.Collect();
 
-            using (EmployeeEntities1 employeEntities = new EmployeeEntities1())
+            using (EmployeeEntities3 employeeEntities = new EmployeeEntities3())
             {
-                for (int i = 0; i < _rows; i++)
+                for (int i = 1; i < _rows; i++)
                 {
-                    EmployeeEntities1.Position.Add(new Position()
+                    employeeEntities.Position.Add(new Position()
                     {
-                        Positions1 = list[i, 1],
+                        Code_Employee = list[i, 0],
+                        Positions = list[i, 1],
                         FullName = list[i, 2],
                         Employee_Login = list[i, 3],
                         Employee_Password = list[i, 4],
@@ -112,13 +75,54 @@ namespace Template4435
                         Type_Of_Entrance = list[i, 6]
                     });
                 }
-                employeEntities.SaveChanges();
+                employeeEntities.SaveChanges();
+                MessageBox.Show("Данные удачно импортировались!");
             }
         }
 
         private void BtnExport_Click(object sender, RoutedEventArgs e)
         {
+            List<Position> positions = new List<Position>();
 
+            using (EmployeeEntities3 employeeEntities = new EmployeeEntities3())
+            {
+                //выоборка на разделение по должности 
+                positions = employeeEntities.Position.GroupBy(x => x.Positions).Select(x => x.FirstOrDefault()).ToList();
+
+                //создание Ecxel
+                var app = new Excel.Application();
+                app.SheetsInNewWorkbook = positions.Count();
+                Excel.Workbook workbook = app.Workbooks.Add(Type.Missing);
+
+                for (int i = 0; i < positions.Count(); i++)
+                {
+                    int startRowIndex = 1;
+                    // именование листов в Excel
+                    Excel.Worksheet worksheet = app.Worksheets.Item[i + 1]; //создание нового листа
+                    worksheet.Name = Convert.ToString(positions[i].Positions); //название листа согласно должности
+
+                    //названия колонок
+                    worksheet.Cells[1][1] = "Код клиента";
+                    worksheet.Cells[2][1] = "ФИО";
+                    worksheet.Cells[3][1] = "Логин";
+
+                    startRowIndex++;
+
+                    foreach (var position in employeeEntities.Position)
+                    {
+                        if (positions[i].Positions == position.Positions)
+                        {
+                            worksheet.Cells[1][startRowIndex] = position.Code_Employee;
+                            worksheet.Cells[2][startRowIndex] = position.FullName;
+                            worksheet.Cells[3][startRowIndex] = position.Employee_Login;
+                            startRowIndex++;
+                        }
+                    }
+                }
+                app.Visible = true;
+            }
         }
+
     }
 }
+
