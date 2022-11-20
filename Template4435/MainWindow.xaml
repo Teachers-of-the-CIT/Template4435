@@ -5,50 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Template4435"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="400" MinHeight="800" MinWidth="400">
+        Title="MainWindow" Height="200" Width="400">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-
+            <RowDefinition Height="11*"></RowDefinition>
+            <RowDefinition Height="11*"></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <Button x:Name="BnTask" Click="BnTask_Click" Content="Задача" Grid.Row="14"></Button>
-        <Button x:Name="toWindowBtn" Click="toWindowBtn_Click" Content="Мартынов Максим Задача" Grid.Row="9"></Button>
-        <Button x:Name="AzatBtn" Click="AzatBtn_Click"  Content="Задача 23" Grid.Row="23"></Button>
-        <Button x:Name="LR1_Shumilkin" Click="LR1_Shumilkin_Click" Content="КОНЕЦ! Шумилкин А.О." Grid.Row="15" />
-        <Button x:Name="BnnTask" Click="BnnTask_Click" Content="Задача" Grid.Row="12"></Button>
-        <Button x:Name="BtnCHELNY" Click="BtnCHELNY_Click"   Content="ЧЕЛНЫ ТОП " Grid.Row="4"></Button>
-        <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="RHFDXTYRJ" Grid.Row="6"></Button>
-        <Button x:Name="Maximov" Click="Maximov_Click" Content="Maximov " Grid.Row="16" />
-        <Button  x:Name="Adieva"  Grid.Row="10" Content="Адиева" Click="Adieva_Click"  />
-        <Button  x:Name="Saifutdinova"  Grid.Row="7" Content="Сайфутдинова" Click="Saifutdinova_Click"  />
-        <Button  x:Name="Safina"  Grid.Row="8" Content="Сафина" Click="Safina_Click"  />
-    </Grid>
+        <UniformGrid Grid.Row="0" Columns="2">
+            <Button x:Name="BnExport" Click="BnExport_Click">Экспорт в Excel</Button>
+            <Button x:Name="BnImport" Click="BnImport_Click">Импорт данных</Button>
+        </UniformGrid>    </Grid>
 </Window>
