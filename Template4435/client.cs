@@ -11,17 +11,27 @@ namespace Template4435
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Text.Json.Serialization;
+
     public partial class client
     {
+        [JsonPropertyName("Id")]
         public int id { get; set; }
+        [JsonPropertyName("CodeOrder")]
         public string Kod_zakaz { get; set; }
+        [JsonPropertyName("CreateDate")]
         public string Date { get; set; }
+        [JsonPropertyName("CreateTime")]
         public string Time { get; set; }
+        [JsonPropertyName("CodeClient")]
         public string Kod_client { get; set; }
+        [JsonPropertyName("Services")]
         public string Uslugi { get; set; }
+        
         public string Status { get; set; }
+        [JsonPropertyName("ClosedDate")]
         public string Date_zakrit { get; set; }
-        public int Vremya { get; set; }
+        [JsonPropertyName("ProkatTime")]
+        public string Vremya { get; set; }
     }
 }

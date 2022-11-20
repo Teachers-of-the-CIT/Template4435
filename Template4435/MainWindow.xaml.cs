@@ -1,10 +1,16 @@
 ﻿using Microsoft.Win32;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-
+using Word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Word;
+using Window = System.Windows.Window;
+using System.IO;
+
 
 namespace Template4435
 {
@@ -65,7 +71,7 @@ namespace Template4435
                         Uslugi = list[i, 5],
                         Status = list[i, 6],
                         Date_zakrit = list[i, 7],
-                        Vremya = i
+                        Vremya = list[i, 8]
                     });
                 }
                 lR2Entities.SaveChanges();
@@ -74,6 +80,8 @@ namespace Template4435
 
         private void Maximov_Click(object sender, RoutedEventArgs e)
         {
+
+
             List<client> allzakaz;
 
 
@@ -90,7 +98,7 @@ namespace Template4435
             {
                 int startRowIndex = 1;
                 Excel.Worksheet worksheet = app.Worksheets.Item[i + 1];
-     
+
                 worksheet.Name = Convert.ToString(alltime[i].Vremya);
 
 
@@ -104,7 +112,7 @@ namespace Template4435
                 var studentsCategories = allzakaz.GroupBy(s => s.Vremya).ToList();
                 foreach (var students in studentsCategories)
                 {
-                    if (Convert.ToInt32(students.Key) == alltime[i].Vremya)
+                    if (students.Key == alltime[i].Vremya)
                     {
                         Excel.Range headerRange =
                         worksheet.Range[worksheet.Cells[1][1],
@@ -117,7 +125,7 @@ namespace Template4435
                         startRowIndex++;
                         foreach (client student in allzakaz)
                         {
-                            if (Convert.ToInt32(student.Vremya) == students.Key)
+                            if (student.Vremya == students.Key)
                             {
                                 worksheet.Cells[1][startRowIndex] =
                                 student.id;
@@ -143,30 +151,135 @@ namespace Template4435
                 }
                 Excel.Range rangeBorders = worksheet.Range[worksheet.Cells[1][1], worksheet.Cells[2][startRowIndex - 2]];
                 rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle =
-                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = 
+                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle =
                 rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle =
-                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = 
+                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle =
                 rangeBorders.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle =
                 rangeBorders.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
                 worksheet.Columns.AutoFit();
             }
             app.Visible = true;
 
-
-
-
-
         }
-
-
-
-
-
-
 
         private void Adieva_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
+        }
+
+        private void Word_Click(object sender, RoutedEventArgs e)
+        {
+
+            List<client> allzakaz;
+
+
+            var alltime = _clientEntities.client.Select(u => new { Vremya = u.Vremya }).Distinct().ToList();
+            allzakaz = _clientEntities.client.ToList().OrderBy(g => g.Kod_zakaz).ToList();
+            var studentsCategories = allzakaz.GroupBy(s => s.Vremya).ToList();
+            var app = new Word.Application();
+            Word.Document document = app.Documents.Add();
+            foreach (var group in studentsCategories)
+            {
+                Word.Paragraph paragraph =
+                document.Paragraphs.Add();
+                Word.Range range = paragraph.Range;
+                range.Text = Convert.ToString(alltime.Where(g => g.Vremya == group.Key).FirstOrDefault().Vremya);
+                paragraph.set_Style("Заголовок 1");
+                range.InsertParagraphAfter();
+                Word.Paragraph tableParagraph = document.Paragraphs.Add();
+                Word.Range tableRange = tableParagraph.Range;
+                Word.Table studentsTable =
+                document.Tables.Add(tableRange, group.Count() + 1, 5);
+                studentsTable.Borders.InsideLineStyle = studentsTable.Borders.OutsideLineStyle = WdLineStyle.wdLineStyleSingle;
+                studentsTable.Range.Cells.VerticalAlignment = WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+                Word.Range cellRange;
+                cellRange = studentsTable.Cell(1, 1).Range;
+                cellRange.Text = "id";
+                cellRange = studentsTable.Cell(1, 2).Range;
+                cellRange.Text = "Код заказа";
+                cellRange = studentsTable.Cell(1, 3).Range;
+                cellRange.Text = "Дата";
+                cellRange = studentsTable.Cell(1, 4).Range;
+                cellRange.Text = "Код клиента";
+                cellRange = studentsTable.Cell(1, 5).Range;
+                cellRange.Text = "Услуги";
+                studentsTable.Rows[1].Range.Bold = 1;
+                studentsTable.Rows[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                int i = 1;
+                foreach (var currentStudent in group)
+                {
+                    cellRange = studentsTable.Cell(i + 1, 1).Range;
+                    cellRange.Text = currentStudent.id.ToString();
+                    cellRange.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                    cellRange = studentsTable.Cell(i + 1, 2).Range;
+                    cellRange.Text = currentStudent.Kod_zakaz;
+                    cellRange.ParagraphFormat.Alignment =
+                    WdParagraphAlignment.wdAlignParagraphCenter;
+                    cellRange = studentsTable.Cell(i + 1, 3).Range;
+                    cellRange.Text = currentStudent.Date;
+                    cellRange.ParagraphFormat.Alignment =
+                    WdParagraphAlignment.wdAlignParagraphCenter;
+                    cellRange = studentsTable.Cell(i + 1, 4).Range;
+                    cellRange.Text = currentStudent.Kod_client;
+                    cellRange.ParagraphFormat.Alignment =
+                    WdParagraphAlignment.wdAlignParagraphCenter;
+                    cellRange = studentsTable.Cell(i + 1, 5).Range;
+                    cellRange.Text = currentStudent.Uslugi;
+                    cellRange.ParagraphFormat.Alignment =
+                    WdParagraphAlignment.wdAlignParagraphCenter;
+                    i++;
+                    document.Words.Last.InsertBreak(WdBreakType.wdPageBreak);
+                }
+
+
+            }
+            app.Visible = true;
+
+            document.SaveAs2(@"C:\Users\Aigul\Documents\outputFileWord.docx");
+            document.SaveAs2(@"C:\Users\Aigul\Documents\outputFilePdf.pdf",
+            WdExportFormat.wdExportFormatPDF);
+
+        }
+
+        private async void json_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                DefaultExt = "*.json",
+                Title = "Выберите файл JSON"
+            };
+            if (!(ofd.ShowDialog() == true))
+                return;
+
+            using (FileStream fs = new FileStream(ofd.FileName, FileMode.OpenOrCreate))
+            {
+                List<client> users = await JsonSerializer.DeserializeAsync<List<client>>(fs);
+                
+            
+           
+
+                using (clientEntities lR2Entities = new clientEntities())
+                {
+                    foreach (client user in users)
+                    {
+                        client userr = new client();
+                        userr.id = user.id ;
+                        userr.Kod_zakaz = user.Kod_zakaz;
+                        userr.Date = user.Date;
+                        userr.Time = user.Time;
+                        userr.Kod_client = user.Kod_client;
+                        userr.Uslugi = user.Uslugi;
+                        userr.Status = user.Status;
+                        userr.Date_zakrit = user.Date_zakrit;
+                        userr.Vremya = user.Vremya;
+
+                        lR2Entities.client.Add(userr);
+                    }
+
+                    lR2Entities.SaveChanges();
+                }
+            }
+
         }
     }
 }

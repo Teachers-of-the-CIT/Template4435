@@ -43,5 +43,7 @@
         <Button x:Name="BtnNikita" Click="BtnNikita_Click" Content="Импорт данных" Grid.Row="15"></Button>
         <Button x:Name="Maximov" Click="Maximov_Click" Content="Экспорт в Excel " Grid.Row="16" />
         <Button  x:Name="Adieva"  Grid.Row="10" Content="Адиева" Click="Adieva_Click"  />
+        <Button x:Name="Word" Grid.Row="17" Content="Экспорт в Word " Click="Word_Click"/>
+        <Button x:Name="json" Click="json_Click" Content="Импорт данных JSON" Grid.Row="13" Height="29" Margin="0,0,-0.4,0" Grid.RowSpan="2" VerticalAlignment="Bottom"></Button>
     </Grid>
 </Window>
