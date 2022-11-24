@@ -66,7 +66,7 @@ namespace Template4435
 
         private void Rahimov_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Автор: Рахимов Раиль Ринатович", "4435_Рахимов_Раиль");
+            new Rahimov().Show();
         }
     }
 }
