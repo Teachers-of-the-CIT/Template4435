@@ -14,5 +14,7 @@
         <UniformGrid Grid.Row="0" Columns="2">
             <Button x:Name="BnExport" Click="BnExport_Click">Экспорт в Excel</Button>
             <Button x:Name="BnImport" Click="BnImport_Click">Импорт данных</Button>
-        </UniformGrid>    </Grid>
+            <Button x:Name="BnExportWord" Click="BnExportWord_Click">Экспорт в Word</Button>
+            <Button x:Name="BnJSONImport" Click="BnJSONImport_Click">Импорт JSON данных</Button>
+               </UniformGrid>    </Grid>
 </Window>

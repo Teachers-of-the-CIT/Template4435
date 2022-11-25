@@ -25,6 +25,6 @@ namespace Template4435
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<users> users { get; set; }
+        public virtual DbSet<Employee> Employee { get; set; }
     }
 }

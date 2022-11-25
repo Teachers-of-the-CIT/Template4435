@@ -13,7 +13,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Data.Entity;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace Template4435
 {
@@ -59,12 +66,15 @@ namespace Template4435
             {
                 for (int i = 1; i < _rows; i++)
                 {
-                    entities.users.Add(new users()
+                    entities.Employee.Add(new Employee()
                     {
-                        Id = list[i, 0],
-                        FIO = list[i, 1],
-                        Login = list[i, 2],
-                        Doljnost = list[i, 3]
+                        CodeStaff = list[i, 0],
+                        Position = list[i, 1],
+                        FullName = list[i, 2],
+                        Log = list[i, 3],
+                        Password = list[i, 4],
+                        LastEnter = list[i, 5],
+                        TypeEnter = list[i, 6]
                     });
                 }
                 entities.SaveChanges();
@@ -73,10 +83,10 @@ namespace Template4435
 
         private void BnExport_Click(object sender, RoutedEventArgs e)
         {
-            List<users> allUsers;
+            List<Employee> allUsers;
             
-            var allDoljnosti = _entities.users.Select(u => new {Doljnost = u.Doljnost}).Distinct().ToList();
-            allUsers = _entities.users.ToList().OrderBy(g => g.Id).ToList();
+            var allDoljnosti = _entities.Employee.Select(u => new {Doljnost = u.Position}).Distinct().ToList();
+            allUsers = _entities.Employee.ToList().OrderBy(g => g.CodeStaff).ToList();
             
             var app = new Excel.Application();
             app.SheetsInNewWorkbook = allDoljnosti.Count();
@@ -91,7 +101,7 @@ namespace Template4435
                     worksheet.Cells[2][2] = "ФИО";
                     worksheet.Cells[3][2] = "Логин";
                 startRowIndex++;    
-                var usersCategories = allUsers.GroupBy(s => s.Doljnost).ToList();
+                var usersCategories = allUsers.GroupBy(s => s.Position).ToList();
                 foreach (var users in usersCategories)
                 {
                     if (users.Key == allDoljnosti[i].Doljnost)
@@ -105,13 +115,13 @@ namespace Template4435
                         Excel.XlHAlign.xlHAlignCenter;
                         headerRange.Font.Italic = true;
                         startRowIndex++;
-                        foreach (users user in allUsers)
+                        foreach (Employee user in allUsers)
                         {
-                            if (user.Doljnost == users.Key)
+                            if (user.Position == users.Key)
                             {
-                                worksheet.Cells[1][startRowIndex] = user.Id;
-                                worksheet.Cells[2][startRowIndex] = user.FIO;
-                                worksheet.Cells[3][startRowIndex] = user.Login;
+                                worksheet.Cells[1][startRowIndex] = user.CodeStaff;
+                                worksheet.Cells[2][startRowIndex] = user.FullName;
+                                worksheet.Cells[3][startRowIndex] = user.Log;
                                 startRowIndex++;
                             }
                         }
@@ -139,5 +149,121 @@ namespace Template4435
             app.Visible = true;
         
         }
+
+        private void BnExportWord_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<string, List<Employee>> keyValues = new Dictionary<string, List<Employee>>();
+            using (Entities entities = new Entities())
+            {
+                if (entities.Employee.FirstOrDefault() == null)
+                {
+                    MessageBox.Show("База данных пуста");
+                    return;
+                }
+                foreach (Employee em in entities.Employee)
+                {
+                    if (!keyValues.ContainsKey(em.Position))
+                    {
+                        keyValues.Add(em.Position, new List<Employee>() { em });
+                    }
+                    else
+                    {
+                        keyValues[em.Position].Add(em);
+                    }
+                }
+            }
+
+            var app = new Word.Application();
+            Word.Document document = app.Documents.Add();
+
+            Word.Paragraph paragraph = document.Paragraphs.Add();
+
+            foreach (string key in keyValues.Keys)
+            {
+                //Заголовок
+                Word.Paragraph Zagolovok = document.Paragraphs.Add();
+                Zagolovok.Range.Text = key;
+                Zagolovok.set_Style("Заголовок 1");
+                Zagolovok.Range.InsertParagraphAfter();
+
+                //Cоздание и форматирование таблицы
+                Word.Paragraph tableParagraph = document.Paragraphs.Add();
+                Word.Range tableRange = tableParagraph.Range;
+                Word.Table EmployeeTable = document.Tables.Add(tableRange, keyValues[key].Count + 1, 3);
+                EmployeeTable.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                EmployeeTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                EmployeeTable.Range.Cells.VerticalAlignment = Word.WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+
+                //Название строк
+                Word.Range cellRange;
+                cellRange = EmployeeTable.Cell(1, 1).Range;
+                cellRange.Text = "Код сотрудника";
+                cellRange = EmployeeTable.Cell(1, 2).Range;
+                cellRange.Text = "ФИО";
+                cellRange = EmployeeTable.Cell(1, 3).Range;
+                cellRange.Text = "Логин";
+                EmployeeTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                EmployeeTable.Rows[1].Range.Bold = 1;
+
+                //Заполнение
+                int i = 1;
+                foreach (Employee CurEmloyee in keyValues[key])
+                {
+                    cellRange = EmployeeTable.Cell(i + 1, 1).Range;
+                    cellRange.Text = CurEmloyee.CodeStaff.ToString();
+                    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                    cellRange = EmployeeTable.Cell(i + 1, 2).Range;
+                    cellRange.Text = CurEmloyee.FullName;
+                    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                    cellRange = EmployeeTable.Cell(i + 1, 3).Range;
+                    cellRange.Text = CurEmloyee.Log;
+                    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    i++;
+                }
+
+                Word.Paragraph countEmployeeParagraph = document.Paragraphs.Add();
+                Word.Range countStudentsRange = countEmployeeParagraph.Range;
+                countStudentsRange.Text = $"Количество сотрудников данной должности - {keyValues[key].Count()}";
+                countStudentsRange.Font.Color = Word.WdColor.wdColorDarkRed;
+                countStudentsRange.InsertParagraphAfter();
+                document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                app.Visible = true;
+                document.SaveAs2(@"D:\outputFileWord.docx");
+                document.SaveAs2(@"D:\outputFilePdf.pdf",
+                Word.WdExportFormat.wdExportFormatPDF);
+            }
+        }
+
+        private void BnJSONImport_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                DefaultExt = "*.json",
+                Filter = "файл Json|*.json",
+                Title = "Выберите файл Json"
+            };
+            if (!(ofd.ShowDialog() == true))
+                return;
+
+            using (Entities entities = new Entities())
+            {
+                List<Employee> listE;
+                using (StreamReader r = new StreamReader(ofd.FileName))
+                {
+                    string s = r.ReadToEnd();
+                    listE = JsonSerializer.Deserialize<List<Employee>>(s, new JsonSerializerOptions());
+                }
+                if (entities.Employee.FirstOrDefault() != null)
+                {
+                    entities.Employee.RemoveRange(entities.Employee.ToList());
+                    entities.SaveChanges();
+                }
+                entities.Employee.AddRange(listE);
+                entities.SaveChanges();
+            }
+        }
     }
-}
+    }
+

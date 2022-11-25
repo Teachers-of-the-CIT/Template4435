@@ -12,11 +12,14 @@ namespace Template4435
     using System;
     using System.Collections.Generic;
     
-    public partial class users
+    public partial class Employee
     {
-        public string Id { get; set; }
-        public string FIO { get; set; }
-        public string Login { get; set; }
-        public string Doljnost { get; set; }
+        public string CodeStaff { get; set; }
+        public string Position { get; set; }
+        public string FullName { get; set; }
+        public string Log { get; set; }
+        public string Password { get; set; }
+        public string LastEnter { get; set; }
+        public string TypeEnter { get; set; }
     }
 }
