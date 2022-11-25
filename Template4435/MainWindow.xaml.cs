@@ -38,8 +38,10 @@ namespace Template4435
 
         private void BnImport_Click(object sender, RoutedEventArgs e)
         {
+            //создание и отображение диалогового окна
             OpenFileDialog ofd = new OpenFileDialog()
             {
+                //выбор файла
                 DefaultExt = "*.xls;*.xlsx",
                 Filter = "файл Excel (Spisok.xlsx)|*.xlsx",
                 Title = "Выберите файл базы данных"
@@ -58,10 +60,10 @@ namespace Template4435
             for (int j = 0; j < _columns; j++)
                 for (int i = 0; i < _rows; i++)
                     list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text;
-            ObjWorkBook.Close(false, Type.Missing, Type.Missing);
-            ObjWorkExcel.Quit();
+            ObjWorkBook.Close(false, Type.Missing, Type.Missing);//закрывается сессия работы с книгой Excel.Workbook
+            ObjWorkExcel.Quit();//выход из Excel
             GC.Collect();
-
+            //добавление данных в таблицу бд
             using (Entities entities = new Entities())
             {
                 for (int i = 1; i < _rows; i++)
@@ -87,34 +89,37 @@ namespace Template4435
             
             var allDoljnosti = _entities.Employee.Select(u => new {Doljnost = u.Position}).Distinct().ToList();
             allUsers = _entities.Employee.ToList().OrderBy(g => g.CodeStaff).ToList();
-            
+            //создание новой книги Excel
             var app = new Excel.Application();
             app.SheetsInNewWorkbook = allDoljnosti.Count();
             Excel.Workbook workbook = app.Workbooks.Add(Type.Missing);
+            //именование листов в книге excel
             for (int i = 0; i < allDoljnosti.Count(); i++)
             {
                 int startRowIndex = 1;
                 Excel.Worksheet worksheet = app.Worksheets.Item[i + 1];
                 worksheet.Name = Convert.ToString(allDoljnosti[i].Doljnost);
-               
+               //сначала номер столбца, потом номер строки
                     worksheet.Cells[1][2] = "Порядковый номер";
                     worksheet.Cells[2][2] = "ФИО";
                     worksheet.Cells[3][2] = "Логин";
                 startRowIndex++;    
+                //группировка по должностям
                 var usersCategories = allUsers.GroupBy(s => s.Position).ToList();
+                //отображение должности в листе
                 foreach (var users in usersCategories)
                 {
                     if (users.Key == allDoljnosti[i].Doljnost)
                     {
                         Excel.Range headerRange =
                         worksheet.Range[worksheet.Cells[1][1],
-                        worksheet.Cells[2][1]];
+                        worksheet.Cells[3][1]];
                         headerRange.Merge();
                         headerRange.Value = allDoljnosti[i].Doljnost;
-                        headerRange.HorizontalAlignment =
-                        Excel.XlHAlign.xlHAlignCenter;
+                        headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                         headerRange.Font.Italic = true;
                         startRowIndex++;
+                        //добавление данных в таблицу
                         foreach (Employee user in allUsers)
                         {
                             if (user.Position == users.Key)
@@ -125,6 +130,7 @@ namespace Template4435
                                 startRowIndex++;
                             }
                         }
+                        //формула рассчета количества строк в таблице
                         worksheet.Cells[1][startRowIndex].Formula =
                         $"=СЧЁТ(A3:A{startRowIndex - 1})";
                         worksheet.Cells[1][startRowIndex].Font.Bold =
@@ -135,6 +141,7 @@ namespace Template4435
                         continue;
                     }
                 }
+                //добавление границ таблицы
                 Excel.Range rangeBorders = worksheet.Range[worksheet.Cells[1][1],
                     worksheet.Cells[3][startRowIndex - 1]];
                 rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle =
@@ -144,8 +151,10 @@ namespace Template4435
                 rangeBorders.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle =
                 rangeBorders.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle =
                 Excel.XlLineStyle.xlContinuous;
+                //установка автоширины всех столбцов
                 worksheet.Columns.AutoFit();
             }
+            //отображение таблицы
             app.Visible = true;
         
         }
@@ -153,6 +162,7 @@ namespace Template4435
         private void BnExportWord_Click(object sender, RoutedEventArgs e)
         {
             Dictionary<string, List<Employee>> keyValues = new Dictionary<string, List<Employee>>();
+           //получение списка пользователей
             using (Entities entities = new Entities())
             {
                 if (entities.Employee.FirstOrDefault() == null)
@@ -172,12 +182,11 @@ namespace Template4435
                     }
                 }
             }
-
+            //создание нового документа word
             var app = new Word.Application();
             Word.Document document = app.Documents.Add();
-
+            //создание параграфа
             Word.Paragraph paragraph = document.Paragraphs.Add();
-
             foreach (string key in keyValues.Keys)
             {
                 //Заголовок
@@ -185,7 +194,6 @@ namespace Template4435
                 Zagolovok.Range.Text = key;
                 Zagolovok.set_Style("Заголовок 1");
                 Zagolovok.Range.InsertParagraphAfter();
-
                 //Cоздание и форматирование таблицы
                 Word.Paragraph tableParagraph = document.Paragraphs.Add();
                 Word.Range tableRange = tableParagraph.Range;
@@ -193,7 +201,6 @@ namespace Template4435
                 EmployeeTable.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                 EmployeeTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                 EmployeeTable.Range.Cells.VerticalAlignment = Word.WdCellVerticalAlignment.wdCellAlignVerticalCenter;
-
                 //Название строк
                 Word.Range cellRange;
                 cellRange = EmployeeTable.Cell(1, 1).Range;
@@ -204,7 +211,6 @@ namespace Template4435
                 cellRange.Text = "Логин";
                 EmployeeTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 EmployeeTable.Rows[1].Range.Bold = 1;
-
                 //Заполнение
                 int i = 1;
                 foreach (Employee CurEmloyee in keyValues[key])
@@ -222,14 +228,17 @@ namespace Template4435
                     cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                     i++;
                 }
-
+                //вывод суммарного количества сотрудников
                 Word.Paragraph countEmployeeParagraph = document.Paragraphs.Add();
                 Word.Range countStudentsRange = countEmployeeParagraph.Range;
                 countStudentsRange.Text = $"Количество сотрудников данной должности - {keyValues[key].Count()}";
                 countStudentsRange.Font.Color = Word.WdColor.wdColorDarkRed;
                 countStudentsRange.InsertParagraphAfter();
+                //разрыв страницы
                 document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                //отображение таблицы
                 app.Visible = true;
+                //сохранение документа
                 document.SaveAs2(@"D:\outputFileWord.docx");
                 document.SaveAs2(@"D:\outputFilePdf.pdf",
                 Word.WdExportFormat.wdExportFormatPDF);
