@@ -14,8 +14,10 @@
 Шумилкин на месте, йоу
 # Template4435_Maximov
 :)
-
+# Template4435
+¯⁠\⁠_⁠(⁠ツ⁠)_/¯
 # Template4435_Adieva
 говорят завтра будет теплее
  
-
+# Template4435_Ziganshina
+^-^
