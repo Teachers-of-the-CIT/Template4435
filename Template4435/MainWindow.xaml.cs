@@ -64,6 +64,11 @@ namespace Template4435
             MessageBox.Show("Автор: Адиева Айгуль Ринатовна", "4435_Адиева_Айгуль");
         }
 
+        private void MATVEEVA_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Матвеева Мария Андреевна", "4435_Матвеева_Мария");
+        }
+        
         private void Stepanova_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Автор: Степанова Анастасия Валентиновна", "4435_Степанова_Анастасия");
