@@ -68,5 +68,30 @@ namespace Template4435
         {
             MessageBox.Show("Автор: Матвеева Мария Андреевна", "4435_Матвеева_Мария");
         }
+        
+        private void Stepanova_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Степанова Анастасия Валентиновна", "4435_Степанова_Анастасия");
+        }
+        
+        private void Aigulyash_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Хайруллина Айгуль Рафисовна, 19 лет", "4435_Хайруллина_Айгуль");
+        }
+        
+        private void Chernovskiy_4435_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Черновский Даниэль", "Черновский Даниэль 4435", MessageBoxButton.OK);
+        }
+        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Автор: Зиганшина Зиля Рушановна", "4435_Зиганшина_Зиля");
+        }
+        
+        private void Rahimov_Click(object sender, RoutedEventArgs e)
+        {
+            new Rahimov().Show();
+        }
     }
 }
