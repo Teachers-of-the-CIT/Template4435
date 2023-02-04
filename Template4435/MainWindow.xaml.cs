@@ -68,5 +68,10 @@ namespace Template4435
         {
             MessageBox.Show("Автор: Зиганшина Зиля Рушановна", "4435_Зиганшина_Зиля");
         }
+        
+        private void Rahimov_Click(object sender, RoutedEventArgs e)
+        {
+            new Rahimov().Show();
+        }
     }
 }
